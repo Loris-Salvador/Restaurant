@@ -11,6 +11,9 @@ public class LoginWindow extends JFrame {
     private JPanel statusPanel = new JPanel();
     public JButton clientButton = new JButton("Un client");
     public JButton personnelButton = new JButton("Un membre du personnel");
+    public JButton serveurButton = new JButton("Serveur");
+    public JButton cuistotButton = new JButton("Cuistot");
+    public JButton barmanButton = new JButton("Barman");
     public LoginWindow()
     {
         initComponent();
@@ -21,17 +24,9 @@ public class LoginWindow extends JFrame {
         JLabel statusLabel = new JLabel("Etes-vous");
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        clientButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        clientButton.setBackground(new Color(0xBC0101));
-        clientButton.setForeground(Color.WHITE);
-        clientButton.setFocusPainted(false);
-        clientButton.setBorderPainted(false);
+        StyleButton(clientButton);
 
-        personnelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        personnelButton.setForeground(Color.WHITE);
-        personnelButton.setBackground(new Color(0xBC0101));
-        personnelButton.setFocusPainted(false);
-        personnelButton.setBorderPainted(false);
+        StyleButton(personnelButton);
 
 
         statusPanel.add(statusLabel);
@@ -59,10 +54,44 @@ public class LoginWindow extends JFrame {
         setVisible(true);
     }
 
+    public void Personnel()
+    {
+        JPanel personnelPanel = new JPanel();
+        personnelPanel.setLayout(new BoxLayout(personnelPanel, BoxLayout.Y_AXIS));
+        personnelPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+        personnelPanel.setBackground(Color.WHITE);
+
+        StyleButton(serveurButton);
+        StyleButton(cuistotButton);
+        StyleButton(barmanButton);
+
+        personnelPanel.add(serveurButton);
+        personnelPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Ajoute un espace vertical de 10 pixels
+        personnelPanel.add(cuistotButton);
+        personnelPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Ajoute un espace vertical de 10 pixels
+        personnelPanel.add(barmanButton);
+
+        setContentPane(personnelPanel);
+        revalidate();
+
+    }
+
     public void setController(LoginController loginController)
     {
         clientButton.addActionListener(loginController);
         personnelButton.addActionListener(loginController);
+        serveurButton.addActionListener(loginController);
+        cuistotButton.addActionListener(loginController);
+        barmanButton.addActionListener(loginController);
+    }
+
+    private void StyleButton(JButton button)
+    {
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setForeground(Color.WHITE);
+        button.setBackground(new Color(0xBC0101));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
     }
 
     public static void main(String[] args) {

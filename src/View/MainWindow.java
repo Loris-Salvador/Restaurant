@@ -8,8 +8,8 @@ public class MainWindow extends JFrame {
     public MainWindow(JPanel panel, String title)
     {
         initComponents();
-        setContentPane(panel);
-        setTitle(title);
+        setMainPanel(panel, title);
+
     }
 
     public void initComponents()
@@ -19,6 +19,12 @@ public class MainWindow extends JFrame {
         setResizable(true);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void setMainPanel(JPanel panel, String title)
+    {
+        setContentPane(panel);
+        setTitle(title);
     }
 
 }
