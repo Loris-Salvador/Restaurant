@@ -1,17 +1,20 @@
 package Controller;
 
 import Model.Profession;
-import View.ClientView;
-import View.LoginWindow;
-import View.MainWindow;
+import View.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 public class LoginController implements ActionListener {
 
     private LoginWindow loginWindow;
     private Profession status;
+
 
     public LoginController(LoginWindow logWindow)
     {
@@ -19,7 +22,6 @@ public class LoginController implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if(e.getSource() == loginWindow.clientButton)
         {
             System.out.println("client Button pressed");
@@ -35,16 +37,120 @@ public class LoginController implements ActionListener {
         {
             System.out.println("Serveur button pressed");
             status = Profession.Serveur;
+            loginWindow.Login();
+
         }
         else if (e.getSource()== loginWindow.cuistotButton)
         {
             System.out.println("Cuistot button pressed");
             status = Profession.Cuistot;
+            loginWindow.Login();
+
         }
         else if (e.getSource()== loginWindow.barmanButton)
         {
             System.out.println("Barman button pressed");
             status = Profession.Barman;
+            loginWindow.Login();
+
+        }
+        else if (e.getSource() == loginWindow.loginButton)
+        {
+            System.out.println("Login button pressed");
+            CheckLogs();
+
+
+
+
+        }
+
+    }
+
+    private void CheckLogs()
+    {
+
+        if(status == Profession.Serveur)
+        {
+            try
+            {
+                Properties prop = new Properties();
+                prop.load(new FileInputStream("PasswordsServeur.properties"));
+
+                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
+                {
+                    System.out.println("Mot de passe correct");
+                    loginWindow.dispose();
+                    MainWindow mainWindow = new MainWindow(new ServeurMainView(), "Serveur");
+                }
+                else
+                {
+                    System.out.println("Mauvais mdp");
+                }
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Erreur ! Fichier non trouve...");
+            }
+            catch(IOException e)
+            {
+                System.out.println("Erreur IO !");
+            }
+        }
+        else if(status == Profession.Cuistot)
+        {
+            try
+            {
+                Properties prop = new Properties();
+                prop.load(new FileInputStream("PasswordsCuisinier.properties"));
+
+                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
+                {
+                    System.out.println("Mot de passe correct");
+                    loginWindow.dispose();
+                    MainWindow mainWindow = new MainWindow(new CuisinierView(), "Cuisinier");
+
+                }
+                else
+                {
+                    System.out.println("Mauvais mdp");
+
+                }
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Erreur ! Fichier non trouve...");
+            }
+            catch(IOException e)
+            {
+                System.out.println("Erreur IO !");
+            }
+        }
+        else if(status == Profession.Barman)
+        {
+            try
+            {
+                Properties prop = new Properties();
+                prop.load(new FileInputStream("PasswordsBarman.properties"));
+
+                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
+                {
+                    System.out.println("Mot de passe correct");
+                    loginWindow.dispose();
+                    MainWindow mainWindow = new MainWindow(new BarmanView(), "Barman");
+                }
+                else
+                {
+                    System.out.println("Mauvais mdp");
+                }
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Erreur ! Fichier non trouve...");
+            }
+            catch(IOException e)
+            {
+                System.out.println("Erreur IO !");
+            }
         }
 
     }
