@@ -146,6 +146,7 @@ public class ClientView extends JPanel {
         plageHoraireList.setMaximumSize(new Dimension(150, momentComboBox.getMaximumSize().height));
         plageHoraireList.setCellRenderer(new DefaultListCellRenderer());
 
+
         plageHoraireList.setAlignmentX(Component.LEFT_ALIGNMENT);
         colonne3.add(Box.createHorizontalGlue()); // Ajouter de la "colle" horizontale pour étirer la liste
         colonne3.add(choixHeureLabel);
@@ -165,6 +166,7 @@ public class ClientView extends JPanel {
         mnbPersonnesComboBox.addActionListener(clientController);
         jourComboBox.addActionListener(clientController);
         nomReservationTextField.getDocument().addDocumentListener(clientController);
+        plageHoraireList.addListSelectionListener(clientController);
     }
 
 

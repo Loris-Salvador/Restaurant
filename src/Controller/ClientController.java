@@ -1,19 +1,16 @@
 package Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Objects;
 
-import Model.Profession;
 import View.ClientView;
-import View.MainWindow;
-
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 
-public class ClientController implements ActionListener, DocumentListener {
+public class ClientController implements ActionListener, DocumentListener, ListSelectionListener {
 
     private ClientView clientView;
 
@@ -34,8 +31,9 @@ public class ClientController implements ActionListener, DocumentListener {
         }
         else if(e.getSource() == clientView.jourComboBox)
         {
-            clientView.nomReservationLabel.setVisible(true);
-            clientView.nomReservationTextField.setVisible(true);
+            //afficher item liste
+            String[] elements = {"19 h 30   -   20 h 30", "20 h 30   -   21 h 30"};
+            clientView.plageHoraireList.setListData(elements);
         }
 
     }
@@ -60,5 +58,14 @@ public class ClientController implements ActionListener, DocumentListener {
     @Override
     public void changedUpdate(DocumentEvent e) {
 
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(e.getSource() == clientView.plageHoraireList)
+        {
+            clientView.nomReservationLabel.setVisible(true);
+            clientView.nomReservationTextField.setVisible(true);
+        }
     }
 }
