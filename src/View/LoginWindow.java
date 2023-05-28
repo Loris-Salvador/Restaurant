@@ -135,6 +135,7 @@ public class LoginWindow extends JFrame {
         cuistotButton.addActionListener(loginController);
         barmanButton.addActionListener(loginController);
         loginButton.addActionListener(loginController);
+        adminButton.addActionListener(loginController);
     }
 
     private void StyleButton(JButton button)

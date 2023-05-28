@@ -26,7 +26,10 @@ public class LoginController implements ActionListener {
         {
             System.out.println("client Button pressed");
             loginWindow.dispose();
-            MainWindow mainWindow = new MainWindow(new ClientView(), "Client");
+            ClientView clientView = new ClientView();
+            ClientController clientController = new ClientController(clientView);
+            clientView.setController(clientController);
+            MainWindow mainWindow = new MainWindow(clientView, "Client");
         }
         else if (e.getSource() == loginWindow.personnelButton)
         {
@@ -58,10 +61,12 @@ public class LoginController implements ActionListener {
         {
             System.out.println("Login button pressed");
             CheckLogs();
-
-
-
-
+        }
+        else if(e.getSource() == loginWindow.adminButton)
+        {
+            System.out.println("Admin Button pressed");
+            status = Profession.Admin;
+            loginWindow.Login();
         }
 
     }
