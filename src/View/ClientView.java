@@ -18,7 +18,7 @@ public class ClientView extends JPanel {
     public JComboBox<String> jourComboBox = new JComboBox<>();
     public JLabel nomReservationLabel = new JLabel("Nom de réservation");
     public JTextField nomReservationTextField = new JTextField("");
-    public JLabel plusDePlaceLabel = new JLabel("<html>Desolé nous n'avons<br>plus de place</html>");
+    public JLabel plusDePlaceLabel = new JLabel("<html>Desolé nous n'avons<br>plus de place pour cette date</html>");
     public JButton menuButton = new JButton("Voir menu");
     public JButton reserverButton = new JButton("Réserver");
     public JLabel choixHeureLabel = new JLabel("Choisissez une heure");
@@ -31,7 +31,6 @@ public class ClientView extends JPanel {
 
     private void initComponent()
     {
-        //
         nbPersonneLabel.setVisible(false);
         mnbPersonnesComboBox.setVisible(false);
         jourLabel.setVisible(false);
@@ -46,7 +45,6 @@ public class ClientView extends JPanel {
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-
 
         JPanel colonne1 = new JPanel();
         colonne1.setLayout(new BoxLayout(colonne1, BoxLayout.Y_AXIS));
@@ -139,7 +137,7 @@ public class ClientView extends JPanel {
 
         JPanel colonne3 = new JPanel();
         colonne3.setLayout(new BoxLayout(colonne3, BoxLayout.Y_AXIS));
-        colonne3.setBorder(new EmptyBorder(10,10,10,20));
+        colonne3.setBorder(new EmptyBorder(10,10,10,40));
         choixHeureLabel.setBorder(new EmptyBorder(7,10,10,10));
         choixHeureLabel.setBorder(new EmptyBorder(0, 10,20,10));
 

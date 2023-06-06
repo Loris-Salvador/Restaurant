@@ -21,21 +21,35 @@ public class ClientController implements ActionListener, DocumentListener, ListS
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == clientView.momentComboBox) {
-            clientView.nbPersonneLabel.setVisible(true);
-            clientView.mnbPersonnesComboBox.setVisible(true);
+            if(clientView.momentComboBox.getSelectedIndex()!=0)
+            {
+                clientView.nbPersonneLabel.setVisible(true);
+                clientView.mnbPersonnesComboBox.setVisible(true);
+            }
+
         }
         else if (e.getSource() == clientView.mnbPersonnesComboBox)
         {
-            clientView.jourLabel.setVisible(true);
-            clientView.jourComboBox.setVisible(true);
+            if(clientView.mnbPersonnesComboBox.getSelectedIndex() != 0)
+            {
+                clientView.jourLabel.setVisible(true);
+                clientView.jourComboBox.setVisible(true);
+            }
+
         }
         else if(e.getSource() == clientView.jourComboBox)
         {
-            //afficher item liste
-            String[] elements = {"19 h 30   -   20 h 30", "20 h 30   -   21 h 30"};
-            clientView.plageHoraireList.setListData(elements);
+            if(clientView.jourComboBox.getSelectedIndex() != 0)
+            {
+                //afficher item liste
+                String[] elements = {"19 h 30   -   20 h 30", "20 h 30   -   21 h 30"};
+                clientView.plageHoraireList.setListData(elements);
+                if (clientView.plageHoraireList.getModel().getSize() == 0)
+                {
+                    clientView.plusDePlaceLabel.setVisible(true);
+                }
+            }
         }
-
     }
 
     @Override

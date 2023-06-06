@@ -30,6 +30,8 @@ public class LoginController implements ActionListener {
             ClientController clientController = new ClientController(clientView);
             clientView.setController(clientController);
             MainWindow mainWindow = new MainWindow(clientView, "Client");
+            MainWindowController mainWindowController = new MainWindowController(mainWindow);
+            mainWindow.setController(mainWindowController);
         }
         else if (e.getSource() == loginWindow.personnelButton)
         {
@@ -113,7 +115,6 @@ public class LoginController implements ActionListener {
                     System.out.println("Mot de passe correct");
                     loginWindow.dispose();
                     MainWindow mainWindow = new MainWindow(new CuisinierView(), "Cuisinier");
-
                 }
                 else
                 {
