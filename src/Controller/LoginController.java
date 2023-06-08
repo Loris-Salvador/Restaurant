@@ -1,19 +1,23 @@
 package Controller;
 
-import Model.Profession;
+import Messages.LoginRequest;
 import View.*;
+import Model.*;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
+import java.io.IOException;
+import java.net.Socket;
 
 public class LoginController implements ActionListener {
 
     private LoginWindow loginWindow;
     private Profession status;
+    private final String serverAddress = "localhost";
+    private final int serverPort = 8080;
 
 
     public LoginController(LoginWindow logWindow)
@@ -78,30 +82,36 @@ public class LoginController implements ActionListener {
 
         if(status == Profession.Serveur)
         {
-            try
-            {
-                Properties prop = new Properties();
-                prop.load(new FileInputStream("PasswordsServeur.properties"));
+            //
+            try {
+                Socket socket = new Socket(serverAddress, serverPort);
+                System.out.println("YO");
+                // Obtention des flux d'entrée/sortie pour la communication avec le serveur
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
-                {
-                    System.out.println("Mot de passe correct");
-                    loginWindow.dispose();
-                    MainWindow mainWindow = new MainWindow(new ServeurMainView(), "Serveur");
-                }
-                else
-                {
-                    System.out.println("Mauvais mdp");
-                }
+                // Création de l'objet LoginRequest à envoyer
+                LoginRequest request = new LoginRequest(loginWindow.userTextField.getText(), loginWindow.mdpTextField.getText(), status);
+                System.out.println("Requete cote client : " + request);
+                // Envoi de l'objet au serveur
+                out.writeObject(request);
+                out.flush();
+                System.out.println("Requête envoyée au serveur : " + request);
+
+                // Lecture de la réponse du serveur
+                Boolean response = (Boolean) in.readObject();
+                System.out.println("Réponse reçue du serveur : " + response);
+
+                // Fermeture des flux et de la connexion avec le serveur
+                out.close();
+                in.close();
+                socket.close();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
-            catch(FileNotFoundException e)
-            {
-                System.out.println("Erreur ! Fichier non trouve...");
-            }
-            catch(IOException e)
-            {
-                System.out.println("Erreur IO !");
-            }
+
         }
         else if(status == Profession.Cuistot)
         {
@@ -115,6 +125,8 @@ public class LoginController implements ActionListener {
                     System.out.println("Mot de passe correct");
                     loginWindow.dispose();
                     MainWindow mainWindow = new MainWindow(new CuisinierView(), "Cuisinier");
+                    MainWindowController mainWindowController = new MainWindowController(mainWindow);
+                    mainWindow.setController(mainWindowController);
                 }
                 else
                 {
@@ -143,6 +155,8 @@ public class LoginController implements ActionListener {
                     System.out.println("Mot de passe correct");
                     loginWindow.dispose();
                     MainWindow mainWindow = new MainWindow(new BarmanView(), "Barman");
+                    MainWindowController mainWindowController = new MainWindowController(mainWindow);
+                    mainWindow.setController(mainWindowController);
                 }
                 else
                 {

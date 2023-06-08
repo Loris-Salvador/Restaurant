@@ -31,7 +31,7 @@ public class CuisinierView extends JPanel {
         gbc.weightx= 1;
 
         JPanel colonne1 = new JPanel();
-        colonne1.setLayout(new BoxLayout(colonne1, BoxLayout.Y_AXIS));
+        colonne1.setLayout(new BorderLayout());
 
         // Créez un tableau bidimensionnel pour les données
         Object[][] data = {
@@ -47,11 +47,11 @@ public class CuisinierView extends JPanel {
         detailcommandeTable.setModel(tableModel);
 
         commandesListe.setBackground(Color.BLUE);
-        colonne1.add(commandesListe);
+        colonne1.add(commandesListe, BorderLayout.NORTH);
 
 
 
-        colonne1.add(pretButton);
+        colonne1.add(pretButton, BorderLayout.SOUTH);
 
         add(colonne1, gbc);
 
