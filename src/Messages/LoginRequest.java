@@ -3,7 +3,7 @@ import Model.*;
 
 import java.io.Serializable;
 
-public class LoginRequest implements Serializable {
+public class LoginRequest extends Request implements Serializable {
     private String username;
     private String password;
     private Profession profession;
@@ -15,8 +15,9 @@ public class LoginRequest implements Serializable {
         password = "none";
     }
 
-    public LoginRequest(String user, String mdp, Profession pr)
+    public LoginRequest(String user, String mdp, Profession pr, TypeRequete type)
     {
+        super(type);
         username = user;
         password = mdp;
         profession = pr;

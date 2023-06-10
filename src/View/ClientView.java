@@ -165,6 +165,7 @@ public class ClientView extends JPanel {
         jourComboBox.addActionListener(clientController);
         nomReservationTextField.getDocument().addDocumentListener(clientController);
         plageHoraireList.addListSelectionListener(clientController);
+        menuButton.addActionListener(clientController);
     }
 
 

@@ -1,13 +1,16 @@
 package Controller;
 
 import Messages.LoginRequest;
+import Messages.TypeRequete;
 import View.*;
 import Model.*;
+import java.lang.Boolean;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.rmi.UnknownHostException;
 import java.util.Properties;
 import java.io.IOException;
 import java.net.Socket;
@@ -18,6 +21,7 @@ public class LoginController implements ActionListener {
     private Profession status;
     private final String serverAddress = "localhost";
     private final int serverPort = 8080;
+    Boolean response;
 
 
     public LoginController(LoginWindow logWindow)
@@ -44,7 +48,7 @@ public class LoginController implements ActionListener {
         }
         else if (e.getSource()== loginWindow.serveurButton)
         {
-            System.out.println("Serveur button pressed");
+            System.out.println("PackageServeur.Serveur button pressed");
             status = Profession.Serveur;
             loginWindow.Login();
 
@@ -79,19 +83,27 @@ public class LoginController implements ActionListener {
 
     private void CheckLogs()
     {
+        try
+        {
+
+            Socket socket = new Socket(serverAddress, serverPort);
+            System.out.println(socket);
+
+        // Obtention des flux d'entrée/sortie pour la communication avec le serveur
+
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+
+
+            System.out.println("njdsnsfn");
+
 
         if(status == Profession.Serveur)
         {
-            //
-            try {
-                Socket socket = new Socket(serverAddress, serverPort);
-                System.out.println("YO");
-                // Obtention des flux d'entrée/sortie pour la communication avec le serveur
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
                 // Création de l'objet LoginRequest à envoyer
-                LoginRequest request = new LoginRequest(loginWindow.userTextField.getText(), loginWindow.mdpTextField.getText(), status);
+                LoginRequest request = new LoginRequest(loginWindow.userTextField.getText(), loginWindow.mdpTextField.getText(), status, TypeRequete.Login);
                 System.out.println("Requete cote client : " + request);
                 // Envoi de l'objet au serveur
                 out.writeObject(request);
@@ -99,78 +111,97 @@ public class LoginController implements ActionListener {
                 System.out.println("Requête envoyée au serveur : " + request);
 
                 // Lecture de la réponse du serveur
-                Boolean response = (Boolean) in.readObject();
-                System.out.println("Réponse reçue du serveur : " + response);
+// Lecture de la réponse du serveur
+// Lecture de la réponse du serveur
 
-                // Fermeture des flux et de la connexion avec le serveur
-                out.close();
-                in.close();
-                socket.close();
-            } catch (IOException exception) {
-                exception.printStackTrace();
+            try {
+                response = (Boolean) in.readObject();
+                System.out.println("Réponse reçue du serveur : " + response);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                System.out.println("Erreur lors de la lecture de l'objet : " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Erreur d'entrée/sortie : " + e.getMessage());
             }
+
+
+
+                if(response)
+                {
+                    loginWindow.dispose();
+                    ServeurMainView serveurMainView = new ServeurMainView();
+                    ServeurController serveurController = new ServeurController(serveurMainView);
+                    serveurMainView.setController(serveurController);
+                    MainWindow mainWindow = new MainWindow(serveurMainView, "Serveur");
+                    MainWindowController mainWindowController = new MainWindowController(mainWindow);
+                    mainWindow.setController(mainWindowController);
+                }
+                else
+                {
+                    System.out.println("MDP incorrect");
+                }
 
         }
         else if(status == Profession.Cuistot)
         {
-            try
-            {
-                Properties prop = new Properties();
-                prop.load(new FileInputStream("PasswordsCuisinier.properties"));
+            // Création de l'objet LoginRequest à envoyer
+            LoginRequest request = new LoginRequest(loginWindow.userTextField.getText(), loginWindow.mdpTextField.getText(), status, TypeRequete.Login);
+            System.out.println("Requete cote client : " + request);
+            // Envoi de l'objet au serveur
+            out.writeObject(request);
+            out.flush();
+            System.out.println("Requête envoyée au serveur : " + request);
 
-                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
-                {
-                    System.out.println("Mot de passe correct");
-                    loginWindow.dispose();
-                    MainWindow mainWindow = new MainWindow(new CuisinierView(), "Cuisinier");
-                    MainWindowController mainWindowController = new MainWindowController(mainWindow);
-                    mainWindow.setController(mainWindowController);
-                }
-                else
-                {
-                    System.out.println("Mauvais mdp");
+            // Lecture de la réponse du serveur
+            Boolean response = (Boolean) in.readObject();
+            System.out.println("Réponse reçue du serveur : " + response);
 
-                }
-            }
-            catch(FileNotFoundException e)
+            if(response)
             {
-                System.out.println("Erreur ! Fichier non trouve...");
+
+                loginWindow.dispose();
+                MainWindow mainWindow = new MainWindow(new CuisinierView(), "Cuisinier");
+                MainWindowController mainWindowController = new MainWindowController(mainWindow);
+                mainWindow.setController(mainWindowController);
             }
-            catch(IOException e)
-            {
-                System.out.println("Erreur IO !");
+            else {
+                System.out.println("MDP incorrect");
             }
+
         }
         else if(status == Profession.Barman)
         {
-            try
-            {
-                Properties prop = new Properties();
-                prop.load(new FileInputStream("PasswordsBarman.properties"));
+            // Création de l'objet LoginRequest à envoyer
+            LoginRequest request = new LoginRequest(loginWindow.userTextField.getText(), loginWindow.mdpTextField.getText(), status, TypeRequete.Login);
+            System.out.println("Requete cote client : " + request);
+            // Envoi de l'objet au serveur
+            out.writeObject(request);
+            out.flush();
+            System.out.println("Requête envoyée au serveur : " + request);
 
-                if (loginWindow.mdpTextField.getText().equals(prop.get(loginWindow.userTextField.getText())))
-                {
-                    System.out.println("Mot de passe correct");
-                    loginWindow.dispose();
-                    MainWindow mainWindow = new MainWindow(new BarmanView(), "Barman");
-                    MainWindowController mainWindowController = new MainWindowController(mainWindow);
-                    mainWindow.setController(mainWindowController);
-                }
-                else
-                {
-                    System.out.println("Mauvais mdp");
-                }
-            }
-            catch(FileNotFoundException e)
+            // Lecture de la réponse du serveur
+            boolean response = (boolean) in.readObject();
+            System.out.println("Réponse reçue du serveur : " + response);
+
+            if(response)
             {
-                System.out.println("Erreur ! Fichier non trouve...");
+                loginWindow.dispose();
+                MainWindow mainWindow = new MainWindow(new BarmanView(), "Barman");
+                MainWindowController mainWindowController = new MainWindowController(mainWindow);
+                mainWindow.setController(mainWindowController);
             }
-            catch(IOException e)
-            {
-                System.out.println("Erreur IO !");
+            else {
+                System.out.println("MDP incorrect");
             }
+        }
+            out.close();
+            in.close();
+            socket.close();
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+            System.out.println(exception.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
     }
